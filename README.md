@@ -38,3 +38,11 @@ The doctor or the nurse can use App to view the patient's current body state. If
 ### 6. The accuracy of the pulse sensor
 ### 7. The rule that to determine if the patient is in danger
 
+
+## Current State
+Now, according to the requirement that the Sensor Watch and the Hop must be connected automatically no matter where the Sensor Watch  is as long as it is within the range of the Hops. To fix the pairing problem, I wrote the shell script (bluetoothe_auto_connected.sh) on Hop. It can search and connect to the Sensor Watch that is near it, and I also wrote some code on Aruino to make Arduino can be initiated the bluetooth automatically. So, I make the AT command programmable. When they are connected, the python code (hop_to_receive_and_push.py) on the Hop can start to receive data from the Sensor Watch.
+
+So, there are 3 part of the codes.
+####1. Shell Script
+####2. Arduino
+####3. ReceiveAndPush
