@@ -44,5 +44,5 @@ Now, according to the requirement that the Sensor Watch and the Hop must be conn
 
 So, there are 3 part of the codes.
 ####1. Shell Script
-####2. Arduino
+####2. SensorWatch
 ####3. ReceiveAndPush

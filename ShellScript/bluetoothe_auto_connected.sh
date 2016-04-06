@@ -2,13 +2,13 @@
 hc05=”30:15:01:09:02:78”
 scannedStr=$(hcitool scan)
 scannedDevice=${scannedStr:14:${#scannedStr}}
-scannedDeviceFile=/home/flowerhop/Desktop/ScannedDeviceListTempFile.txt
+scannedDeviceFile=./ScannedDeviceListTempFile.txt
 
 echo “Find this ${hc05}”
 echo “Scanned Device List ${scannedDevice}”
 echo ${scannedDevice} > ${scannedDeviceFile}
 
-finalStr=$(grep “${hc05}” /home/flowerhop/Desktop/ScannedDeviceListTempFile.txt)
+finalStr=$(grep “${hc05}” ./ScannedDeviceListTempFile.txt)
 
 if [ “${finalStr}” != “” ]; then
   echo “Find ${hc05}”
