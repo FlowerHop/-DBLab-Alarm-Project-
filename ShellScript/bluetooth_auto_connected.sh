@@ -27,22 +27,23 @@ do
 
   for device in $deviceList
   do
-    echo “Find this ${device}”
-    echo “Scanned Device List ${scannedDevice}”
+    echo "Find this ${device}"
+    echo "Scanned Device List ${scannedDevice}"
     echo ${scannedDevice} > ${scannedDeviceFile}
 
-    finalStr=$(grep “${device}” ./ScannedDeviceListTempFile.txt)
+    finalStr=$(grep "${device}" ./ScannedDeviceListTempFile.txt)
 
-    if [ “${finalStr}” != “” ]; then
-      echo “Find ${device}”
-      echo “Start to connect...”
+    if [ "${finalStr}" != "" ]; then
+      echo "Find ${device}"
+      echo "Start to connect..."
       sudo rfcomm connect /dev/rfcomm0 ${device} 1
     else
-      echo “No Result!”
+      echo "No Result!"
     fi
   done
-
+  
   sleep 30s
+
 done
 
 
