@@ -42,7 +42,14 @@ The doctor or the nurse can use App to view the patient's current body state. If
 ## Current State
 Now, according to the requirement that the Sensor Watch and the Hop must be connected automatically no matter where the Sensor Watch  is as long as it is within the range of the Hops. To fix the pairing problem, I wrote the shell script (bluetoothe_auto_connected.sh) on Hop. It can search and connect to the Sensor Watch that is near it, and I also wrote some code on Aruino to make Arduino can be initiated the bluetooth automatically. So, I make the AT command programmable. When they are connected, the python code (hop_to_receive_and_push.py) on the Hop can start to receive data from the Sensor Watch.
 
+In Server (140.115.155.103), I write some RESTful api :
+  1. GET: '/', return the index.html (but now, it has't been implemented) 
+  2. GET: '/api/postData/:bioWatchId/:pulse/:dateAndTime', to post the bio signal
+  3. GET: '/showRecords', log all the bio signals it saved
+  4. POST: '/addBiosignal', it is used by the GET mothed '/api/postData/:bioWatchId/:pulse/:dateAndTime' to implement that I can just use url to post because I have no idea the other ways to use a url to do the POST method.
+
 So, there are 3 part of the codes.
 ####1. Shell Script
 ####2. SensorWatch
 ####3. ReceiveAndPush
+####4. Server
