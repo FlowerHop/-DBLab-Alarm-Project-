@@ -26,7 +26,7 @@ To push the bio info which is got from the component, Sensor Watch, to the cloud
 All data would be saved in this component.
 
 ### App
-The doctor or the nurse can use App to view the patient's current body state. If the patient is in danger, it would raise alarm. The way of this alarm needs more discussion. Ideally, I hope it can be done via WebRTC for the bug in Bugzilla (https://bugzilla.mozilla.org/show_bug.cgi?id=1234442). It would be implemented on Web so that can be used on all platforms.
+The doctor or the nurse can use App to view the patient's current body state. If the patient is in danger, it would raise alarm. The way of this alarm needs more discussion. Ideally, I hope it can be done via WebRTC for the bug in Bugzilla ([1234438](https://bugzilla.mozilla.org/show_bug.cgi?id=1234438)). It would be implemented on Web so that can be used on all platforms.
 
 ## Problems
 
