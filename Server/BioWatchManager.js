@@ -58,7 +58,7 @@ BioWatchManager.prototype = {
   init: function () {
     // default bio watch list
     // In the future, it needs a manager to manage (CRUD) the bio watches.
-    
+
     var watchList = ["01", "02", "03"];
     for (var i = 0; i < watchList.length; i++) {
       this.addBioWatch (watchList[i]);
@@ -69,7 +69,7 @@ BioWatchManager.prototype = {
   addRawData: function (rawData) {
     console.log (rawData);
     var bioWatchId = rawData.bioWatchId;
-    if (bioWatchList[bioWatchId] != 'undefined') {
+    if (this.bioWatchList[bioWatchId] != 'undefined') {
       this.bioWatchList[bioWatchId].addBioData (rawData);
     } else {
       console.log ("This bio watch hasn't been registered: " + rawData.bioWatchId);
