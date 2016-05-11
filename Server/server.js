@@ -9,22 +9,26 @@ var bioWatchManager = require ('./BioWatchManager');
 var app = express ();
 
 bioWatchManager.init ();
+
 app.use (bodyParser.json ());
 app.use (express.static ('public'));
 
 var port = 1338;
 
+//var places = ["Room A", "Room B", "Room C", "Restroom A", "None"];
+
 app.get ('/', function (req, res) {
   
 });
 
-app.get ('/api/postData/:bioWatchId/:pulse/:dateAndTime', function (req, res) {
-  
+app.get ('/api/postData/:inPlace/:bioWatchId/:pulse/:dateAndTime', function (req, res) {
+  var inPlace = req.params.inPlace;
   var bioWatchId = req.params.bioWatchId;
   var pulse = req.params.pulse;
   var dateAndTime = req.params.dateAndTime;
 
   var bioWatchSignal = {
+    inPlace: inPlace,
     bioWatchId: bioWatchId, 
     pulse: pulse,
     dateAndTime: dateAndTime
@@ -37,11 +41,7 @@ app.get ('/api/postData/:bioWatchId/:pulse/:dateAndTime', function (req, res) {
   	headers: {
   	  "Content-Type": "application/json"
   	},
-  	body: JSON.parse (JSON.stringify ({
-  		bioWatchId: bioWatchId,
-  	    pulse: pulse,
-  	    dateAndTime: dateAndTime
-  	}))
+  	body: bioWatchSignal
   };
 
   request (options, function (error, response, body) {
@@ -60,6 +60,7 @@ app.post ('/addBioWatchSignal', function (req, res) {
 
 app.get ('/showRecords', function (req, res) {
   bioWatchManager.showAll ();
+  console.log (JSON.stringify(bioWatchManager));
   res.end ();
 });
 

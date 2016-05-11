@@ -8,6 +8,7 @@ var BioInfo = function (p, dAndt) {
 var BioWatch = function (id) {
   this.device_id = id;
   this.bioInfo = [];
+  this.inPlace = "";
 };
 
 BioWatch.prototype = {
@@ -18,8 +19,10 @@ BioWatch.prototype = {
   addBioData: function (rawData) {
     var pulse = rawData.pulse;
     var dateAndTime = rawData.dateAndTime;
+    var inPlace = rawData.inPlace;
     var length = this.bioInfo.length;
     this.bioInfo[length] = new BioInfo (pulse, dateAndTime);
+    this.updateLocation (inPlace);
   },
 
   removeBioData: function (dateAndTime) {
@@ -31,9 +34,14 @@ BioWatch.prototype = {
   }, 
 
   showRecords: function () {
+    console.log ("The Bio Watch (" + this.device_id + ") is in place: " + this.inPlace);
   	for (var i = 0; i < this.bioInfo.length; i++) {
-      console.log (this.device_id + ", " + this.bioInfo[i].pulse + ", " + this.bioInfo[i].dateAndTime);
+      console.log ("  " + this.device_id + ", " + this.bioInfo[i].pulse + ", " + this.bioInfo[i].dateAndTime);
   	}
+  },
+
+  updateLocation: function (place) {
+    this.inPlace = place;
   }
 };
 
@@ -59,7 +67,7 @@ BioWatchManager.prototype = {
     // default bio watch list
     // In the future, it needs a manager to manage (CRUD) the bio watches.
 
-    var watchList = ["01", "02", "03"];
+    var watchList = ['01', '02', '03'];
     for (var i = 0; i < watchList.length; i++) {
       this.addBioWatch (watchList[i]);
     }
@@ -69,15 +77,24 @@ BioWatchManager.prototype = {
   addRawData: function (rawData) {
     console.log (rawData);
     var bioWatchId = rawData.bioWatchId;
-    if (this.bioWatchList[bioWatchId] != 'undefined') {
-      this.bioWatchList[bioWatchId].addBioData (rawData);
-    } else {
-      console.log ("This bio watch hasn't been registered: " + rawData.bioWatchId);
-    } 
+    
+    if (bioWatchId == undefined) {
+      return;
+    }
+
+    for (var i = 0; i < this.bioWatchList.length; i++) {
+      if (this.bioWatchList[i].device_id === bioWatchId) {
+        this.bioWatchList[i].addBioData (rawData);
+        return;
+      }
+    }
+    
+    console.log ("This bio watch hasn't been registered: " + bioWatchId);
   },
 
   addBioWatch: function (bioWatchId) {
-    this.bioWatchList[bioWatchId] = new BioWatch (bioWatchId);
+    this.bioWatchList.push (new BioWatch (bioWatchId));
+    console.log ("New bio watch id: " + bioWatchId);
   },
 
   showAll: function () {
@@ -86,8 +103,6 @@ BioWatchManager.prototype = {
   	}
   }
 };	
-
-
 
 module.exports = new BioWatchManager ();
   
