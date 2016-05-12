@@ -1,5 +1,4 @@
 'use strict';
-
 var BioInfo = function (p, dAndt) {
   this.pulse = p;
   this.dateAndTime = dAndt;	
@@ -66,11 +65,24 @@ BioWatchManager.prototype = {
   init: function () {
     // default bio watch list
     // In the future, it needs a manager to manage (CRUD) the bio watches.
+    var fs = require ('fs');
+    var path = require ('path');
+    var bioWatchList = [];
 
-    var watchList = ['01', '02', '03'];
-    for (var i = 0; i < watchList.length; i++) {
-      this.addBioWatch (watchList[i]);
-    }
+    var tempThis = this;
+    fs.readFile (path.join (__dirname, 'criteria_settings.json'), function (err, data) {
+      if (err) {
+        console.log ('Error: ' + err);
+        return;
+      }
+  
+      bioWatchList = JSON.parse(data).bioWatches;
+
+      for (var i = 0; i < bioWatchList.length; i++) {
+        tempThis.addBioWatch (bioWatchList[i]);
+      }
+    });
+
     // it needs some feature of checking connection
   },
 

@@ -44,9 +44,12 @@ Now, according to the requirement that the Sensor Watch and the Hop must be conn
 
 In Server (140.115.155.103), I write some RESTful api :
   1. GET: '/', return the index.html (but now, it has't been implemented) 
-  2. GET: '/api/postData/:inPlace/:bioWatchId/:pulse/:dateAndTime', to post the bio signal
-  3. GET: '/showRecords', log all the bio signals it saved
-  4. POST: '/addBiosignal', it is used by the GET mothed '/api/postData/:bioWatchId/:pulse/:dateAndTime' to implement that I can just use url to post because I have no idea the other ways to use a url to do the POST method.
+  2. GET: '/api/patients_status/', to post the bio signal
+
+  For Test:
+  1. GET: '/test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime', to post the bio siganl by GET Method
+  2. GET: '/test/showRecords', to log
+  3. POST: '/test/addBioWatchSignal', it is used by /test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime
 
 So, there are 3 part of the codes.
 ####1. Shell Script

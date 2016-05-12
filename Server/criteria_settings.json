@@ -1,0 +1,15 @@
+{  
+   "rooms":[  
+      "RoomA",
+      "RoomB",
+      "RoomC",
+      "WC1",
+      "WC2"
+   ],
+   "bioWatches":[  
+      "01",
+      "02",
+      "03",
+      "04"
+   ]
+}
