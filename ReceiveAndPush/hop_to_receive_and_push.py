@@ -10,7 +10,7 @@ bioWatchId = str(sys.argv[3])
 
 headers = {'content-type': 'application/json'}
 url = 'http://140.115.155.103:1338/api/patients_status'
-payload = {'inPlace': roomName, 'bioWatchId': '01','pulse': '78', 'dateAndTime': '100', 'rssi': '-10'}
+payload = {'inPlace': roomName, 'bioWatchId': bioWatchId,'pulse': '78', 'dateAndTime': '100', 'rssi': '-10'}
 
 try: 
 
