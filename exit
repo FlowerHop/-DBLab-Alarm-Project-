@@ -1,0 +1,63 @@
+[33mcommit b582e906e78f773b3b160cd5569f026e3ac93f19[m
+Author: Flowerhop <l941166@hotmail.com>
+Date:   Tue May 3 15:23:54 2016 +0800
+
+    Fix type " , readline, etc.
+
+[33mcommit 07ca6d82d28e618140dcc2d2aa172ee46c0cf616[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Mon Apr 11 16:30:39 2016 +0800
+
+    new /ShellScript/device_list.txt configure file and implement the feature of automaticall scanning and connecting based on the configure file
+
+[33mcommit bf8102f1be92c10686649eaf355fd041e44ca9f9[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Thu Apr 7 16:29:25 2016 +0800
+
+    rename for the typing mistake
+
+[33mcommit e95e6129d93e7fee8bd345c24cc031913c75261e[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Thu Apr 7 16:27:15 2016 +0800
+
+    chmod bluetooth_auto_connected.sh
+
+[33mcommit 90e3992ac67d83883947e3b38d4cc5bd1494a372[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Wed Apr 6 15:06:36 2016 +0800
+
+    just modify some type mistakes
+
+[33mcommit d51f4a7e92759247da0ef160f7bb476021f56479[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Wed Apr 6 15:03:11 2016 +0800
+
+    add SensorWatch and /SensorWatch/sensor_watch.ino
+
+[33mcommit 8ed4ff1210f4454cffa88391632b18369a7390e0[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Wed Apr 6 14:53:28 2016 +0800
+
+    add ReceiveAndPush and /RecieveAndPush/hop_to_receive_and_push.py
+
+[33mcommit 85ca6211cd1aa0450c7b4d6df70702553bfb8a35[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Wed Apr 6 14:51:35 2016 +0800
+
+    New ShellScript and /ShellScript/bluetooth_auto_connected.sh
+
+[33mcommit 03021e355f7cd1acaf088c6b1d19f277617ce29e[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Wed Apr 6 14:43:20 2016 +0800
+
+    Update README.md
+    
+    add Current State
+
+[33mcommit 0dbcf70743d66f1f28eee7d91d6e7bba66f67aa3[m
+Author: FlowerHop <l941166@hotmail.com>
+Date:   Thu Mar 31 16:25:43 2016 +0800
+
+    Create README.md
+    
+    Add project description

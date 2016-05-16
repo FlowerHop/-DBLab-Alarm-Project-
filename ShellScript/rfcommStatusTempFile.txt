@@ -1,0 +1,1 @@
+rfcomm1: 00:1A:7D:DA:71:11 -> 20:15:03:20:19:15 channel 1 closed [reuse-dlc release-on-hup ] rfcomm2: 00:1A:7D:DA:71:11 -> 30:15:01:09:02:78 channel 1 connected [reuse-dlc release-on-hup tty-attached]

@@ -51,7 +51,7 @@ In Server (140.115.155.103), I write some RESTful api :
   2. GET: '/test/showRecords', to log
   3. POST: '/test/addBioWatchSignal', it is used by /test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime
 
-So, there are 3 part of the codes.
+So, there are 4 parts of the codes.
 ####1. Shell Script
 ####2. SensorWatch
 ####3. ReceiveAndPush
