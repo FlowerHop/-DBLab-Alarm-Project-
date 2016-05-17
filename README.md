@@ -54,7 +54,7 @@ In Server (140.115.155.103), I write some RESTful api :
   3. POST: '/test/addBioWatchSignal', it is used by /test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime
   4. GET: '/test/scanedResult/:inPlace/:bioWatchId/:rssi/', to post the bio watches' distance by GET Method
 
-So, there are 3 part of the codes.
+So, there are 4 parts of the codes.
 ####1. Shell Script
 ####2. SensorWatch
 ####3. ReceiveAndPush
