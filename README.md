@@ -44,12 +44,15 @@ Now, according to the requirement that the Sensor Watch and the Hop must be conn
 
 In Server (140.115.155.103), I write some RESTful api :
   1. GET: '/', return the index.html (but now, it has't been implemented) 
-  2. GET: '/api/patients_status/', to post the bio signal
+  2. POST: '/api/patients_status/', to post the bio signal
+  3. POST: '/api/scanedResult', update the current bio watches distance
+
 
   For Test:
   1. GET: '/test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime', to post the bio siganl by GET Method
   2. GET: '/test/showRecords', to log
   3. POST: '/test/addBioWatchSignal', it is used by /test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime
+  4. GET: '/test/scanedResult/:inPlace/:bioWatchId/:rssi/', to post the bio watches' distance by GET Method
 
 So, there are 3 part of the codes.
 ####1. Shell Script
