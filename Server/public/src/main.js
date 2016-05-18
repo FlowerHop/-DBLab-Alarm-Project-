@@ -22,7 +22,6 @@ var RecordBox = React.createClass ({
   render: function () {
   	return (
       <div className="recordBox">
-        <h1>Hospital</h1>
         <PlaceList data={this.state.data}/>
       </div>
   	);
@@ -49,7 +48,7 @@ var Place = React.createClass ({
   render: function () {
     return (
       <div className="place">
-        <h2>Place: {this.props.place.inPlace}</h2>
+        <p>{this.props.place.inPlace}</p>
         <BioWatchList devices={this.props.place.devices}/>
       </div>
     );
@@ -77,8 +76,9 @@ var BioWatch = React.createClass ({
   render: function () {
   	return (
   	  <div className='bioWatch'>
-  	    <h3>BioWatch id: {this.props.bioSignal.device_id} pulse: {this.props.bioSignal.pulse}</h3>
-  	  </div>
+  	    <h4>{this.props.bioSignal.device_id}</h4>
+  	    <p>Pulse: {this.props.bioSignal.pulse}</p>
+      </div>
   	);
   }
 });

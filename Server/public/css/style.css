@@ -1,0 +1,35 @@
+.recordBox {
+  margin-top: 50px;
+  padding-right: 50px;
+  padding-left: 50px;
+  text-align: center;
+  font-size: 40px;
+}
+
+
+
+.placeList {
+  font-size: 30px;
+  text-align: left;
+  
+}
+
+.place {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 10px;
+  background-color: red;
+  color: white;
+}
+
+.bioWatchList {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.bioWatch {
+ 
+}
