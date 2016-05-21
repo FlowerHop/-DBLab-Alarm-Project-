@@ -267,6 +267,9 @@ function initialStatus () {
     var rooms = criteria.rooms;
     var bioWatches = criteria.bioWatches;
 
+    // if db file is not exist
+    // input default data
+
     var initial_status = [];
 
     for (var i = 0; i < rooms.length; i++) {

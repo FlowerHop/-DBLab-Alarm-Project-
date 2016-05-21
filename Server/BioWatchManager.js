@@ -1,13 +1,14 @@
 'use strict';
-var BioInfo = function (p, dAndt) {
+var BioInfo = function (p, dAndt, inPlace, rssi) {
   this.pulse = p;
   this.dateAndTime = dAndt;	
+  this.inPlace = inPlace;
+  this.rssi = rssi;
 };
 
 var BioWatch = function (id) {
   this.device_id = id;
   this.bioInfo = [];
-  this.inPlace = "";
 };
 
 BioWatch.prototype = {
@@ -19,9 +20,9 @@ BioWatch.prototype = {
     var pulse = rawData.pulse;
     var dateAndTime = rawData.dateAndTime;
     var inPlace = rawData.inPlace;
+    var rssi = rawData.rssi;
     var length = this.bioInfo.length;
-    this.bioInfo[length] = new BioInfo (pulse, dateAndTime);
-    this.updateLocation (inPlace);
+    this.bioInfo[length] = new BioInfo (pulse, dateAndTime, inPlace, rssi);
   },
 
   removeBioData: function (dateAndTime) {
@@ -35,7 +36,7 @@ BioWatch.prototype = {
   showRecords: function () {
     console.log ("The Bio Watch (" + this.device_id + ") is in place: " + this.inPlace);
   	for (var i = 0; i < this.bioInfo.length; i++) {
-      console.log ("  " + this.device_id + ", " + this.bioInfo[i].pulse + ", " + this.bioInfo[i].dateAndTime);
+      console.log ("  " + this.device_id + ", " + this.bioInfo[i].pulse + ", " + this.bioInfo[i].dateAndTime + ", " + this.bioInfo[i].inPlace + ", " + this.bioInfo[i].rssi);
   	}
   },
 
@@ -113,6 +114,10 @@ BioWatchManager.prototype = {
   	for (var bioWatch in this.bioWatchList) {
       this.bioWatchList[bioWatch].showRecords ();
   	}
+  }, 
+
+  getBioWatchList: function () {
+    return this.bioWatchList;
   }
 };	
 
