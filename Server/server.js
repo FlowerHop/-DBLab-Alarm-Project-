@@ -7,11 +7,14 @@ var bodyParser = require ('body-parser');
 var queryString = require ('querystring');
 var request = require ('request');
 var bioWatchManager = require ('./BioWatchManager');
+var bioSignalDatabase = new (require ('./BioSignalDatabase')) ();
 
 var app = express ();
 
-var CRITERIA_SETTINGS = path.join (__dirname, 'criteria_settings.json');
-var PATIENTS_STATUS_FILE = path.join (__dirname, 'patients_status.json');
+var CRITERIA_SETTINGS_FILE_PATH = path.join (__dirname, 'criteria_settings.json');
+var PATIENTS_STATUS_FILE_PATH = path.join (__dirname, 'patients_status.json');
+var DATABASE_FILE_NAME = 'bioSignalDatabase.db';
+var DATABASE_FILE_PATH = path.join (__dirname, DATABASE_FILE_NAME);
 
 bioWatchManager.init ();
 
@@ -55,92 +58,116 @@ app.get ('/test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime/:rssi', f
     body: bioWatchSignal
   };
 
-  request (options, function (error, response, body) {
-    if (error) {
-      console.log ('Post data error: ' + error);
-    }
-  }); 
+  var flowControl = new Promise (function (resolve, reject) {
+    request (options, function (error, response, body) {
+      if (error) {
+        reject (error);
+      }
 
-  res.end ();
+      resolve ();
+    }); 
+  })
+  .catch (function (error) {
+    console.log ('Post data error: ' + error);
+  }).then (function () {
+    res.end ();
+  });
 });
 
 app.post ('/api/patients_status', function (req, res) {
   bioWatchManager.addRawData (req.body);
-  fs.readFile (PATIENTS_STATUS_FILE, function (err, data) {
-    if (err) {
-      console.log ("Error: " + error);
-      return;
-    }
-    var patients_status = JSON.parse (data);
 
-    var inPlace = req.body.inPlace;
-    var bioWatchId = req.body.bioWatchId;
-    var pulse = req.body.pulse;
-    var rssi = req.body.rssi;
+  var flowControl = new Promise (function (resolve, reject) {
+    fs.readFile (PATIENTS_STATUS_FILE_PATH, function (err, data) {
+      if (err) {
+        reject (err);
+      }
 
-    // find the place of this bio watch
-    var lastPlace = -1;
-    for (var i = 0; i < patients_status.length; i++) {
-      var devices = patients_status[i].devices;
-      
-      for (var j = 0; j < devices.length; j++) { 
-        // find the bio watch whether exist
-        if (devices[j].device_id === bioWatchId) {
-          lastPlace = i;
-          
-          // in the same place
-          if (lastPlace === inPlace) {
-            devices[j].pulse = pulse;
-            devices[j].rssi = rssi;
-          } else {
-            // remove the last place of the bio watch
-            devices.splice (j,1);
-            
-            // change place
-            for (var k = 0; k < patients_status.length; k++) {
-              if (patients_status[k].inPlace === inPlace) {
-                patients_status[k].devices.push ({device_id: bioWatchId, rssi: rssi, pulse: pulse});
-                break;
+      var patients_status = JSON.parse (data);  
+
+      var inPlace = req.body.inPlace;
+      var bioWatchId = req.body.bioWatchId;
+      var pulse = req.body.pulse;
+      var rssi = req.body.rssi;
+
+      // find the place of this bio watch
+      var lastPlace = -1;
+
+      for (var i in patients_status) {
+        var devices = patients_status[i].devices;
+        for (var j in devices) { 
+          // find the bio watch whether exist
+          if (devices[j].device_id === bioWatchId) {
+            lastPlace = i;
+            // in the same place
+            if (lastPlace === inPlace) {
+              devices[j].pulse = pulse;
+              devices[j].rssi = rssi;
+            } else {
+              // remove the last place of the bio watch
+              devices.splice (j,1);
+              
+              // change place
+              for (var k = 0; k < patients_status.length; k++) {
+                if (patients_status[k].inPlace === inPlace) {
+                  patients_status[k].devices.push ({device_id: bioWatchId, rssi: rssi, pulse: pulse});
+                  break;
+                }
               }
             }
+            break;
           }
+        }
+  
+        if (lastPlace != -1) {
           break;
         }
       }
 
-      if (lastPlace != -1) {
-        break;
-      }
-    }
-
-    // if the bio watch doesn't exist
-    if (lastPlace === -1) {
-      for (var i = 0; i < patients_status.length; i++) {
-        if (patients_status[i].inPlace === inPlace) {
-          patients_status[i].devices.push ({device_id: bioWatchId, rssi: rssi, pulse: pulse});          
-          break;
-        }
-      }
-    }
-
-    fs.writeFile (PATIENTS_STATUS_FILE, JSON.stringify(patients_status), function(err) {
-      if (err) {
-        console.error ("Error: " + err);
-        return;
-      }
+      // if the bio watch doesn't exist
+      if (lastPlace === -1) {
+        reject ("This bio watch hasn't been registered: " + bioWatchId);
+        // for (var i = 0; i < patients_status.length; i++) {
+        //   if (patients_status[i].inPlace === inPlace) {
+        //     patients_status[i].devices.push ({device_id: bioWatchId, rssi: rssi, pulse: pulse});          
+        //     break;
+        //   }
+        // }
+      }  
+      
+      resolve (patients_status);
+      
     });
+  }.bind (this)).then (function (patients_status) {
+    return new Promise (function (resolve, reject) {
+      fs.writeFile (PATIENTS_STATUS_FILE_PATH, JSON.stringify(patients_status), function(err) {
+        if (err) {
+          throw new Error (err);
+        }
+        resolve ();
+      });
+    });
+  }).catch (function (err) {
+    console.log ("Error: " + err);
+  }).then (function () {
+    res.end ();
   });
-  res.end ();
 });
 
 app.get ('/api/patients_status', function (req, res) {
-  fs.readFile (PATIENTS_STATUS_FILE, function (err, data) {
-    if (err) {
-      console.log ("Error: " + err);
-      return;
-    }
-
-    res.json (JSON.parse (data));
+  var flowControl = new Promise (function (resolve, reject) {
+    fs.readFile (PATIENTS_STATUS_FILE_PATH, function (err, data) {
+      if (err) {
+        reject (err);
+      }
+      
+      res.json (JSON.parse (data));
+      resolve ();
+    });
+  }).catch (function (err) {
+    console.log ('Error: ' + err);    
+  }).then (function () {
+    res.end ();
   });
 });
 
@@ -175,77 +202,91 @@ app.get ('/test/scanedResult/:inPlace/:bioWatchId/:rssi/', function (req, res) {
     body: bioWatchSignal
   };
 
-  request (options, function (error, response, body) {
-    if (error) {
-      console.log ('Post data error: ' + error);
-    }
-    console.log (response.body);
-  }); 
-
-  res.end ();
+  var flowControl = new Promise (function (resolve, reject) {
+    request (options, function (error, response, body) {
+      if (error) {
+        reject (error);
+      }
+      res.send (response.body.toString ());
+      resolve ();
+    });
+  })
+  .catch (function (error) {
+    console.log ('Post data error: ' + error);
+  }).then (function () {
+    res.end ();
+  });
+  
 });
 
 app.post ('/api/scanedResult', function (req, res) {
   // I would check if the last rssi is smaller (the last is farther) then connect(send: 1) else nothing(send: 0)
   var toConnect = '-1';
   
-  fs.readFile (PATIENTS_STATUS_FILE, function (err, data) {
-    if (err) {
-      console.log ("Error: " + error);
-      return;
-    }
-    
-    var patients_status = JSON.parse (data);
- 
-    var inPlace = req.body.inPlace;
-    var bioWatchId = req.body.bioWatchId;
-    var rssi = req.body.rssi;
-    
-    // find the place of this bio watch
-    var foundPlace = -1;
-    for (var i = 0; i < patients_status.length; i++) {
-      var devices = patients_status[i].devices;
-
-      for (var j = 0; j < devices.length; j++) {
-        // find the bio watch whether exist
-        if (devices[j].device_id === bioWatchId) {
-          foundPlace = i;
-
-          // if it doesn't connect yet
-          if (patients_status[foundPlace].inPlace == 'None') {
-            toConnect = '1';
+  var flowControl = new Promise (function (resolve, reject) {
+    fs.readFile (PATIENTS_STATUS_FILE_PATH, function (err, data) {
+      if (err) {
+        reject (err);
+      }
+      
+      var patients_status = JSON.parse (data);
+   
+      var inPlace = req.body.inPlace;
+      var bioWatchId = req.body.bioWatchId;
+      var rssi = req.body.rssi;
+      
+      // find the place of this bio watch
+      var foundPlace = -1;
+      for (var i in patients_status) {
+        var devices = patients_status[i].devices;
+  
+        for (var j in devices) {
+          // find the bio watch whether exist
+          if (devices[j].device_id === bioWatchId) {
+            foundPlace = i;
+  
+            // if it doesn't connect yet
+            if (patients_status[foundPlace].inPlace == 'None') {
+              toConnect = '1';
+              res.send (toConnect);
+              break;
+            } 
+  
+            if (patients_status[foundPlace].inPlace === inPlace) {
+              devices[j].rssi = rssi;
+              toConnect = '0';
+            } else {
+              // to check
+              if (parseInt(devices[j].rssi) < parseInt(rssi)) {
+                toConnect = '1';
+              } else {
+                toConnect = '0';
+              }
+            }
             res.send (toConnect);
             break;
-          } 
-
-          if (foundPlace === inPlace) {
-            devices[j].rssi = rssi;
-            toConnect = '0';
-          } else {
-            // to check
-            if (parseInt(devices[j].rssi) < parseInt(rssi)) {
-              toConnect = '1';
-            } else {
-              toConnect = '0';
-            }
           }
-          res.send (toConnect);
+        }
+  
+        if (foundPlace != -1) {
           break;
         }
       }
-
-      if (foundPlace != -1) {
-        break;
-      }
-    }
-   
-    fs.writeFile (PATIENTS_STATUS_FILE, JSON.stringify(patients_status), function(err) {
-      if (err) {
-        console.error ("Error: " + err);
-        return;
-      }
+  
+      resolve (patients_status);
     });
-
+  }.bind (this)).then (function (patients_status) {
+    return new Promise (function (resolve, reject) {
+      fs.writeFile (PATIENTS_STATUS_FILE_PATH, JSON.stringify(patients_status), function(err) {
+        if (err) {
+          reject (err);
+        }
+        resolve ();
+      });
+    });
+  }).catch (function (err) {
+    console.log ('Error: ' + err);
+  }).then (function () {
     res.end ();
   });
 });
@@ -256,7 +297,7 @@ app.listen (app.get ('port'), function () {
 });
 
 function initialStatus () {
-  fs.readFile (CRITERIA_SETTINGS, function (err, data) {
+  fs.readFile (CRITERIA_SETTINGS_FILE_PATH, function (err, data) {
 
     if (err) {
       console.log ("Error: " + err);
@@ -269,6 +310,25 @@ function initialStatus () {
 
     // if db file is not exist
     // input default data
+    fs.access (DATABASE_FILE_PATH, fs.F_OK, function (err) {
+      if (err == null) {
+        bioSignalDatabase.init (DATABASE_FILE_NAME);
+        return;
+      } else {
+        // not exist
+        console.log (DATABASE_FILE_NAME + " doesn't exist");
+        console.log ("input the data of criteria_settings into database");
+        bioSignalDatabase.init (DATABASE_FILE_NAME).then (function () {
+          rooms.forEach (function (room) {
+            bioSignalDatabase.insertPlace (room);
+          });
+
+          bioWatches.forEach (function (bioWatch) {
+            bioSignalDatabase.insertBioWatch (bioWatch);
+          });
+        });
+      }       
+    });
 
     var initial_status = [];
 
@@ -284,7 +344,7 @@ function initialStatus () {
 
     initial_status.push (None);
   
-    fs.writeFile (PATIENTS_STATUS_FILE, JSON.stringify(initial_status), function(err) {
+    fs.writeFile (PATIENTS_STATUS_FILE_PATH, JSON.stringify(initial_status), function(err) {
       if (err) {
         console.error ("Error: " + err);
         return;

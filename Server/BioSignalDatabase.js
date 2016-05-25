@@ -9,38 +9,24 @@ var BioSignalDatabase = function () {
 
 BioSignalDatabase.prototype = {
   init: function (fileName) {
-  	this.fileName = fileName;
-    this.db = new (require ('sqlite3').verbose ()).Database (this.fileName);
+    return new Promise (function (resolve, reject) {
+      this.fileName = fileName;
+      this.db = new (require ('sqlite3').verbose ()).Database (this.fileName);
     
-    this.placeTable = "Place";
-    this.bioWatchTable = "BioWatch";
-    this.bioWatchInPlaceTable = "BioWatchInPlace";
-    
-    this.db.run ("CREATE TABLE IF NOT EXISTS " + this.placeTable + "(place_id TEXT PRIMARY KEY)");
+      this.placeTable = "Place";
+      this.bioWatchTable = "BioWatch";
+      this.bioWatchInPlaceTable = "BioWatchInPlace";
 
-    this.db.run ("CREATE TABLE IF NOT EXISTS " + this.bioWatchTable + "(device_id TEXT PRIMARY KEY)");
+      this.db.serialize (function () {
+        this.db.run ("CREATE TABLE IF NOT EXISTS " + this.placeTable + "(place_id TEXT PRIMARY KEY)");
 
-    this.db.run ("CREATE TABLE IF NOT EXISTS " + this.bioWatchInPlaceTable + "(in_id INTEGER PRIMARY KEY AUTOINCREMENT, device_id TEXT NOT NULL, place_id TEXT NOT NULL, pulse INTEGER NOT NULL, rssi INTEGER NOT NULL, dateAndTime TEXT NOT NULL)");
-    
-    // fs.readFile (CRITERIA_SETTINGS, function (err, data) {
-    //   if (err) {
-    //   	console.log (err);
-    //   	return;
-    //   }
+        this.db.run ("CREATE TABLE IF NOT EXISTS " + this.bioWatchTable + "(device_id TEXT PRIMARY KEY)");
 
-    //   var criteria = JSON.parse (data);
-    //   var rooms = criteria.rooms;
-    //   var bioWatches = criteria.bioWatches;  
-
-    //   for (var i = 0; i < rooms.length; i++) {
-    //     addPlace (rooms[i]);
-    //   }  
-
-    //   for (var i = 0; i < bioWatches.length; i++) {
-    //   	addBioSignal (bioWatches[i]);
-    //   }
-
-    // });
+        this.db.run ("CREATE TABLE IF NOT EXISTS " + this.bioWatchInPlaceTable + "(in_id INTEGER PRIMARY KEY AUTOINCREMENT, device_id TEXT NOT NULL, place_id TEXT NOT NULL, pulse INTEGER NOT NULL, rssi INTEGER NOT NULL, dateAndTime TEXT NOT NULL)", function () {
+            resolve ();
+        });
+      }.bind (this));
+    }.bind (this));
   }, 
 
   insertPlace: function (place_id) {
@@ -100,6 +86,8 @@ BioSignalDatabase.prototype = {
       var called = false;
 
       this.db.serialize (function () {
+        // because the callback of db.search might not be called if no query result
+        // I choose use serialize procedure to handle this
         this.db.each ("SELECT place_id FROM " + this.placeTable + " WHERE place_id = ?", [place_id], function (err, data) {
           if (err) {
             reject (err);
@@ -126,6 +114,7 @@ BioSignalDatabase.prototype = {
       var called = false;
 
       this.db.serialize (function () {
+        // same as above
         this.db.each ("SELECT device_id FROM " + this.bioWatchTable + " WHERE device_id = ?", [device_id], function (err, data) {
           if (err) {
             reject (err);
