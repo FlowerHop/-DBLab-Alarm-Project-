@@ -24,6 +24,12 @@ To push the bio info which is got from the component, Sensor Watch, to the cloud
 
 ### Server
 All data would be saved in this component.
+#### server.js 
+handle routers (RESTful API)
+#### BioSignalDatabase
+save all the data
+#### BioWatchManager
+handle operations of BioSignalDatabase
 
 ### App
 The doctor or the nurse can use App to view the patient's current body state. If the patient is in danger, it would raise alarm. The way of this alarm needs more discussion. Ideally, I hope it can be done via WebRTC for the bug in Bugzilla ([1234438](https://bugzilla.mozilla.org/show_bug.cgi?id=1234438)). It would be implemented on Web so that can be used on all platforms.
@@ -50,9 +56,7 @@ In Server (140.115.155.103), I write some RESTful api :
 
   For Test:
   1. GET: '/test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime', to post the bio siganl by GET Method
-  2. GET: '/test/showRecords', to log
-  3. POST: '/test/addBioWatchSignal', it is used by /test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime
-  4. GET: '/test/scanedResult/:inPlace/:bioWatchId/:rssi/', to post the bio watches' distance by GET Method
+  2. GET: '/test/scanedResult/:inPlace/:bioWatchId/:rssi/', to post the bio watches' distance by GET Method
 
 So, there are 4 parts of the codes.
 ####1. Shell Script
