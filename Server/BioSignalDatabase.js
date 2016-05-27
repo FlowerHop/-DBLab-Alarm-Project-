@@ -1,7 +1,6 @@
 'use strict';
 var fs = require ('fs');
 var path = require ('path');
-var CRITERIA_SETTINGS = path.join (__dirname, 'criteria_settings.json');
 
 var BioSignalDatabase = function () {
   this.fileName = "";

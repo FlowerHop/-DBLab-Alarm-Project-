@@ -52,6 +52,7 @@ In Server (140.115.155.103), I write some RESTful api :
   1. GET: '/', return the index.html (but now, it has't been implemented) 
   2. POST: '/api/patients_status/', to post the bio signal
   3. POST: '/api/scanedResult', update the current bio watches distance
+  4. GET: 'api/bioWatchList', return json of the bio watch list
 
 
   For Test:

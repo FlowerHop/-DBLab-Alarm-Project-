@@ -155,6 +155,19 @@ app.post ('/api/scanedResult', function (req, res) {
   });
 });
 
+app.get ('/api/bioWatchList', function (req, res) {
+  Promise.resolve ()
+  .then (function () {
+    return bioWatchManager.getBioWatchList ();
+  })
+  .then (function (bioWatchList) {
+    res.json (JSON.stringify (bioWatchList));
+  })
+  .then (function () {
+    res.end ();
+  });
+});
+
 app.listen (app.get ('port'), function () {
   bioWatchManager.init ()
   .then (function () {

@@ -2,46 +2,6 @@
 // Main Control from Server to BioSignalDatabase
 // maintain criteria setting, patients status and operation of the BioSignalDatabase
 
-
-// var BioWatch = function (id) {
-//   this.device_id = id;
-//   this.bioInfo = [];
-// };
-
-// BioWatch.prototype = {
-//   init: function () {
-//   	console.log ("init");
-//   },
-
-//   addBioData: function (rawData) {
-//     var pulse = rawData.pulse;
-//     var dateAndTime = rawData.dateAndTime;
-//     var inPlace = rawData.inPlace;
-//     var rssi = rawData.rssi;
-//     var length = this.bioInfo.length;
-//     this.bioInfo[length] = new BioInfo (pulse, dateAndTime, inPlace, rssi);
-//   },
-
-//   removeBioData: function (dateAndTime) {
-//     for (var i = 0; i < this.bioInfo.length; i++) {
-//       if (dateAndTime == this.bioInfo[i].dateAndTime) {
-//        	this.bioInfo.splice (i, 1);
-//       }
-//     }
-//   }, 
-
-//   showRecords: function () {
-//     console.log ("The Bio Watch (" + this.device_id + ") is in place: " + this.inPlace);
-//   	for (var i = 0; i < this.bioInfo.length; i++) {
-//       console.log ("  " + this.device_id + ", " + this.bioInfo[i].pulse + ", " + this.bioInfo[i].dateAndTime + ", " + this.bioInfo[i].inPlace + ", " + this.bioInfo[i].rssi);
-//   	}
-//   },
-
-//   updateLocation: function (place) {
-//     this.inPlace = place;
-//   }
-// };
-
 var BioWatchManager = function () {
   var path = require ('path');
   this.fs = require ('fs');
@@ -54,19 +14,6 @@ var BioWatchManager = function () {
 }
 
 BioWatchManager.prototype = {
-  // handleEvent: function (event) {
-  //   switch (event.type) {
-  //     case 'input-signal':
-  //   	var data = event.detail;
-  //   	this.addRawData (data);
-  //       break;
-  //     case 'new-biowatch':
-  //   	var bioWatchId = event.detail;
-  //   	this.addBioWatch(bioWatchId);
-  //   	break;
-  //   }
-  // },
-
   init: function () {
     return new Promise (function (resolve, reject) {
       // if (autoReset == true) {
@@ -444,6 +391,13 @@ BioWatchManager.prototype = {
     .catch (function (err) {
       console.log ('Error: ' + err);
     })
+  }, 
+
+  getBioWatchList: function () {
+    return this.bioSignalDatabase.getBioWatchList ()
+    .catch (function (err) {
+      console.log ('Error: ' + err);
+    });
   }
 };	
 
