@@ -1,0 +1,40 @@
+{
+  "name": "biocenter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "request": "^2.72.0",
+    "sqlite3": "^3.1.4",
+    "querystring": "^0.2.0",
+    "should": "^8.3.2"
+  },
+  "devDependencies": {
+    "brfs": "^1.4.3",
+    "json-loader": "^0.5.4",
+    "mocha": "^2.4.5",
+    "transform-loader": "^0.2.3",
+    "webpack": "^1.13.1"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js",
+    "dev": "webpack-dev-server --devtool eval --progress --colors",
+    "deploy": "NODE_ENV=production webpack -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlowerHop/-DBLab-Alarm-Project-.git"
+  },
+  "author": "Flowerhop",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FlowerHop/-DBLab-Alarm-Project-/issues"
+  },
+  "homepage": "https://github.com/FlowerHop/-DBLab-Alarm-Project-#readme"
+}
