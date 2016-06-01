@@ -10,7 +10,7 @@ bioWatchId = str(sys.argv[3])
 
 headers = {'content-type': 'application/json'}
 url = 'http://140.115.155.103:1338/api/patients_status'
-payload = {'inPlace': roomName, 'bioWatchId': bioWatchId,'pulse': '78', 'dateAndTime': '100', 'rssi': '-10'}
+payload = {'inPlace': roomName, 'bioWatchId': bioWatchId,'pulse': '78', 'rssi': '-10'}
 
 try: 
 
@@ -19,10 +19,11 @@ try:
   print("start")
   tStart = time.time()
   newMsg = bluetoothSerial.readline()
-  tEnd = time.time()
+  tEnd = tStart
 
-  while ((tEnd-tStart) < 5):
-    newMsg = "From HC-05"
+  while ((tEnd-tStart) < 10):
+    newMsg = bluetoothSerial.readline()
+    print(newMsg)
     tEnd = time.time()
 
 

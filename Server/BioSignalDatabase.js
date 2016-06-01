@@ -88,7 +88,7 @@ BioSignalDatabase.prototype = {
         if (err) {
           reject (err);
         }
-
+        
         resolve (rows[0].place_id);
       });
     }.bind (this));

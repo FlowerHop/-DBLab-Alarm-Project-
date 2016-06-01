@@ -237,6 +237,7 @@ BioWatchManager.prototype = {
     var pulse = bioInfo.pulse;
     var rssi = bioInfo.rssi;
     var dateAndTime = bioInfo.dateAndTime;
+    
     return this.bioSignalDatabase.insertBioSignal (device_id, place_id, pulse, rssi, dateAndTime)
     .then (function () {
       return this.updateStatus (bioInfo);
@@ -252,9 +253,8 @@ BioWatchManager.prototype = {
         if (err) {
           reject (err);
         }
-  
+
         var patients_status = JSON.parse (data);
-        console.log (patients_status);
 
         var device_id = bioInfo.device_id;
         var place_id = bioInfo.place_id;
@@ -272,7 +272,7 @@ BioWatchManager.prototype = {
             if (devices[j].device_id === device_id) {
               lastPlace = i;
               // in the same place
-              if (lastPlace === place_id) {
+              if (patients_status[lastPlace].inPlace === place_id) {
                 devices[j].pulse = pulse;
                 devices[j].rssi = rssi;
                 devices[j].dateAndTime = dateAndTime;
@@ -311,7 +311,7 @@ BioWatchManager.prototype = {
         resolve (patients_status);
       });
     }.bind (this))
-    then (function (patients_status) {
+    .then (function (patients_status) {
       return new Promise (function (resolve, reject) {
         this.fs.writeFile (this.PATIENTS_STATUS_FILE_PATH, JSON.stringify(patients_status), function(err) {
           if (err) {

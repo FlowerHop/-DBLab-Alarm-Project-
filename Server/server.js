@@ -27,18 +27,16 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get ('/test/update_status/:inPlace/:bioWatchId/:pulse/:dateAndTime/:rssi', function (req, res) {
+app.get ('/test/update_status/:inPlace/:bioWatchId/:pulse/:rssi', function (req, res) {
   var inPlace = req.params.inPlace;
   var bioWatchId = req.params.bioWatchId;
   var pulse = req.params.pulse;
-  var dateAndTime = req.params.dateAndTime;
   var rssi = req.params.rssi;
 
   var bioWatchSignal = {
     inPlace: inPlace,
     bioWatchId: bioWatchId, 
     pulse: pulse,
-    dateAndTime: dateAndTime,
     rssi: rssi
   };
 
