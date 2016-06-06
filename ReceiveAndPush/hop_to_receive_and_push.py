@@ -52,5 +52,5 @@ except OSError:
   print("OSError")
 except :
   print("Error.")
-
-bluetoothSerial.close()
+finally :
+  bluetoothSerial.close()

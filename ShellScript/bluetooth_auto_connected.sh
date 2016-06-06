@@ -70,7 +70,7 @@ do
     deviceStatus=$(grep "${device}" ./rfcommStatusTempFile.txt)    
 
     if [ "${deviceStatus}" != "" ]; then
-      echo ${deviceStatus} > ./rfcommDeviceTemp.txt
+      echo ${deviceStatus} > ./rfcommDeviceTempFile.txt
       closed=$(grep "closed" ./rfcommDeviceTempFile.txt)
 
       rfcommNumber=$(echo $deviceStatus | sed 's/rfcomm/\n/g' | sed 's/:.*//g')

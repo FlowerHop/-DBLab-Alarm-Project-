@@ -51,11 +51,11 @@ void initBTSerial () {
     digitalWrite (9, HIGH);
   
     BTSerial.begin (38400);  // HC-05 default speed in AT command more
-    
+    delay (200);
     for (int i = 0; i < sizeof (INIT); i++) {
         BTSerial.write (INIT[i]);
     }
-    
+    delay (200);
     for (int i = 0; i < sizeof (INQ); i++) {
         BTSerial.write (INQ[i]);
     }
