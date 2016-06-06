@@ -70,7 +70,24 @@ do
     deviceStatus=$(grep "${device}" ./rfcommStatusTempFile.txt)    
 
     if [ "${deviceStatus}" != "" ]; then
-      echo "$device in rfcomm connection"
+      echo ${deviceStatus} > ./rfcommDeviceTemp.txt
+      closed=$(grep "closed" ./rfcommDeviceTempFile.txt)
+
+      rfcommNumber=$(echo $deviceStatus | sed 's/rfcomm/\n/g' | sed 's/:.*//g')
+
+      # remove the prefix "\n"
+      for row in $rfcommNumber
+      do
+        rfcommNumber=$row
+      done
+      
+      if [ "${closed}" != "" ]; then
+        echo "channel closed"
+        #sudo rfcomm connect /dev/rfcomm${rfcommNumber} ${device} 1 &
+        #sleep 3s
+      fi
+
+      echo "$device in rfcomm$rfcommNumber connection"
       sudo python ./../ReceiveAndPush/hop_to_receive_and_push.py ${rfcommNumber} ${roomName} ${device} &
       sleep 10s
       # it possibly needs to update rssi info
