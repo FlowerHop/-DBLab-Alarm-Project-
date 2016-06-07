@@ -25,7 +25,8 @@
     "test": "mocha",
     "start": "node server.js",
     "dev": "webpack-dev-server --devtool eval --progress --colors",
-    "deploy": "NODE_ENV=production webpack -p"
+    "deploy": "NODE_ENV=production webpack -p",
+    "reinstallSQL": "npm rm sqlite3 & npm install sqlite3"
   },
   "repository": {
     "type": "git",
