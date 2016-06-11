@@ -2,17 +2,14 @@
 
 # the configure file of the device list
 # it must get list from server
-deviceListFile=./device_list.txt
+configures=$(curl http://140.115.155.103:1338/api/configures)
+# configures=$(curl http://localhost:1338/api/configures)
 
-# read the device list
-exec < $deviceListFile
-read deviceListData
-
-deviceList=$(echo $deviceListData | tr "," " ")
+registeredDeviceList=$(echo $configures | tr "," " ")
 
 # display all the devices in the configure
-echo "Device list: "
-for device in $deviceList
+echo "Registered device list: "
+for device in $registeredDeviceList
 do
   echo "  $device"
 done
@@ -25,17 +22,12 @@ read roomName
 # Now, intervall of scanning is 30s.
 ## loop for scan and connect 
 rfcommNumber=0
-rfcommStatusTempFile=./rfcommStatusTempFile.txt
 
 getAvailableRfcommNumber() {
   rfcommStatus=$(sudo rfcomm)
   echo ${rfcommStatus}
-  echo ${rfcommStatus} > ${rfcommStatusTempFile}
-  
-  exec < $rfcommStatusTempFile
-  read rfcommStatusData
 
-  rfcommStatusData=$(echo $rfcommStatusData | sed 's/rfcomm/\n/g' | sed 's/:.*//g')
+  rfcommStatusData=$(echo $rfcommStatus | sed 's/rfcomm/\n/g' | sed 's/:.*//g')
 
   counter=0
   for row in $rfcommStatusData
@@ -56,22 +48,18 @@ do
   # it must update the registered devices from server
   scannedStr=$(hcitool scan)
   scannedDevice=${scannedStr:14:${#scannedStr}}
-  scannedDeviceFile=./ScannedDeviceListTempFile.txt
 
-  for device in $deviceList
+  for device in $registeredDeviceList
   do
     echo "Check $device"
     echo "Scanned Device List ${scannedDevice}"
-    echo ${scannedDevice} > ${scannedDeviceFile}
     
     # update connection status
     rfcommStatus=$(sudo rfcomm)
-    echo ${rfcommStatus} > ./rfcommStatusTempFile.txt
-    deviceStatus=$(grep "${device}" ./rfcommStatusTempFile.txt)    
+    deviceStatus=$(echo $rfcommStatus | grep "${device}")    
 
     if [ "${deviceStatus}" != "" ]; then
-      echo ${deviceStatus} > ./rfcommDeviceTempFile.txt
-      closed=$(grep "closed" ./rfcommDeviceTempFile.txt)
+      closed=$(echo $deviceStatus | grep "closed")
 
       rfcommNumber=$(echo $deviceStatus | sed 's/rfcomm/\n/g' | sed 's/:.*//g')
 
@@ -92,7 +80,7 @@ do
       sleep 10s
       # it possibly needs to update rssi info
     else
-      turnOn=$(grep "${device}" ./ScannedDeviceListTempFile.txt)
+      turnOn=$(echo $scannedDevice | grep "${device}")
 
       if [ "${turnOn}" != ""  ]; then
         getAvailableRfcommNumber

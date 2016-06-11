@@ -166,6 +166,20 @@ app.get ('/api/bioWatchList', function (req, res) {
   });
 });
 
+app.get ('/api/configures', function (req, res) {
+  Promise.resolve ()
+  .then (function () {
+    return bioWatchManager.getBioWatchList ();
+  })
+  .then (function (bioWatchList) {
+    var configures = bioWatchList.join (',');
+    res.send (configures);
+  })
+  .then (function () {
+    res.end ();
+  });
+});
+
 app.listen (app.get ('port'), function () {
   bioWatchManager.init ()
   .then (function () {
