@@ -42,7 +42,7 @@ getAvailableRfcommNumber() {
 
 
 sendGETMethod(){
-  echo "send GET method \n"
+  echo "send GET method"
   # the configure file of the device list
   # it must get list from server
   configures=$(curl http://140.115.155.103:1338/api/configures)
@@ -72,7 +72,7 @@ scanAvailableDevices(){
   echo "scanAvailableDevices"
   scannedStr=$(hcitool scan)
   scannedDevice=${scannedStr:14:${#scannedStr}}
-  echo "Scanned device list: $scammedDevive"
+  echo "Scanned device list: $scannedDevive"
 
   if [ "${scannedDevice}" != " " ]; then
     isAvailableDevices=1
@@ -204,6 +204,7 @@ subGrafcet() {
     x30=1
     x3=0
     x2=1
+    action
   fi
 
   subAction

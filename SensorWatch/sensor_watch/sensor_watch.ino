@@ -90,6 +90,7 @@ void initBTSerial () {
 }
 
 void sendDataToSerial (int data){
+  if (data != -1) {
     char pulse[4];
 
     sprintf (pulse, "%03i", data);
@@ -110,6 +111,7 @@ void sendDataToSerial (int data){
     result[20] = result_postfix[1];
     Serial.print (result);
     BTSerial.write (result);
+  }
 }
 
 
