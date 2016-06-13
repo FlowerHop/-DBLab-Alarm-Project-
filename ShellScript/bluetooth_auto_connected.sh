@@ -13,6 +13,7 @@ x35=0
 connected=0
 isAvailableDevices=0
 isTurnOn=0
+deviceIndex=0
 
 # Maybe it will need another configure file to set the interval of others frequency to overcome the low battery life.
 # Now, intervall of scanning is 30s.
@@ -40,12 +41,12 @@ getAvailableRfcommNumber() {
 }
 
 
-sendReceivedSignalWithPOSTMethod(){
+sendGETMethod(){
   echo "send GET method \n"
   # the configure file of the device list
   # it must get list from server
-  # configures=$(curl http://140.115.155.103:1338/api/configures)
-  configures=$(curl http://localhost:1338/api/configures)
+  configures=$(curl http://140.115.155.103:1338/api/configures)
+  # configures=$(curl http://localhost:1338/api/configures)
   # echo ${configures} > ./device_list.txt
 
   # # read the device list
@@ -60,17 +61,18 @@ sendReceivedSignalWithPOSTMethod(){
     echo "  $device"
   done
 
-  # registeredDeviceList=(${deviceList// / })
-  # registeredDeviceListLength=${#deviceList[@]}
-
+  registeredDeviceList=(${registeredDeviceList// / })
+  
   # get the room name
   exec < ./RoomInfo.txt
   read roomName
 }
 
 scanAvailableDevices(){
+  echo "scanAvailableDevices"
   scannedStr=$(hcitool scan)
   scannedDevice=${scannedStr:14:${#scannedStr}}
+  echo "Scanned device list: $scammedDevive"
 
   if [ "${scannedDevice}" != " " ]; then
     isAvailableDevices=1
@@ -81,14 +83,17 @@ scanAvailableDevices(){
 
 
 init(){
+  echo "init"
   deviceIndex=0
 }
 
 updateConnectionStatus(){
+  echo "update connection status"
   rfcommStatus=$(sudo rfcomm)
 }
 
 selectDevice(){
+  echo "select device"
   device=${registeredDeviceList[$deviceIndex]}
   deviceStatus=$(echo $rfcommStatus | grep "${device}")
 
@@ -129,12 +134,14 @@ sendConnectionRequest(){
   sleep 3s
 }
 
-sendPOSTMethod(){
+sendReceivedSignalWithPOSTMethod(){
+  echo "send received signal with POST method"
   sudo python ./../ReceiveAndPush/hop_to_receive_and_push.py ${rfcommNumber} ${roomName} ${device} &
   sleep 10s
 }
 
 nextLoop(){
+  echo "next loop"
   let deviceIndex+=1
 }
 
@@ -165,10 +172,10 @@ subAction() {
 }
 
 subGrafcet() {
-  if [ ${x30} == 1 ] && [ $deviceIndex < ${deviceListLength} ]; then
+  if [ ${x30} == 1 ] && [ $deviceIndex -lt ${#registeredDeviceList[@]} ]; then
     x30=0
     x31=1
-  elif [ ${x30} == 1 ] && [ $deviceIndex >= ${deviceListLength} ]; then  
+  elif [ ${x30} == 1 ] && [ $deviceIndex -ge ${#registeredDeviceList[@]} ]; then  
     x3=0
     x2=1
   elif [ ${x31} == 1 ]; then
@@ -182,17 +189,17 @@ subGrafcet() {
     x33=1
   elif [ ${x32} == 1 ] && [ ${connected} == 1 ]; then
     x32=0
-    x35=1
+    x34=1
   elif [ ${x33} == 1 ]; then
     x33=0
     x34=1
   elif [ ${x34} == 1 ]; then
     x34=0
     x35=1
-  elif [ ${x35} == 1 ] && [ $deviceIndex < ${deviceListLength} ]; then
+  elif [ ${x35} == 1 ] && [ $deviceIndex -lt ${#registeredDeviceList[@]} ]; then
     x35=0
     x31=1
-  elif [ ${x35} == 1 ] && [ $deviceIndex >= ${deviceListLength} ]; then
+  elif [ ${x35} == 1 ] && [ $deviceIndex -ge ${#registeredDeviceList[@]} ]; then
     x35=0
     x30=1
     x3=0
