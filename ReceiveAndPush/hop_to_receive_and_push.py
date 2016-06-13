@@ -8,6 +8,8 @@ rfcommNumber = str(sys.argv[1])
 roomName = str(sys.argv[2])
 bioWatchId = str(sys.argv[3])
 
+bluetoothSerial = None
+
 def parseSignal(rawSignal):
   pattern="From Bio Watch: "
   number="0123456789"
@@ -53,4 +55,5 @@ except OSError:
 except :
   print("Error.")
 finally :
-  bluetoothSerial.close()
+  if bluetoothSerial != None:
+    bluetoothSerial.close()
