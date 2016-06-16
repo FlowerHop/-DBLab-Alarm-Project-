@@ -2,14 +2,17 @@
 var fs = require ('fs');
 var path = require ('path');
 
-var BioSignalDatabase = function () {
-  this.fileName = "";
+var BioSignalDatabase = function (fileName) {
+  this.fileName = fileName;
 };
 
 BioSignalDatabase.prototype = {
   init: function (fileName) {
     return new Promise (function (resolve, reject) {
-      this.fileName = fileName;
+      if (fileName != "undefined") {
+        this.fileName = fileName;
+      }
+      
       this.db = new (require ('sqlite3').verbose ()).Database (this.fileName);
     
       this.placeTable = "Place";

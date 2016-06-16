@@ -10,7 +10,7 @@ var BioWatchManager = function () {
   this.DATABASE_FILE_NAME = 'bioSignalDatabase.db';
   this.DATABASE_FILE_PATH = path.join (__dirname, this.DATABASE_FILE_NAME);
   this.bioWatchList = [];
-  this.bioSignalDatabase = new (require ('./BioSignalDatabase')) ();
+  this.bioSignalDatabase = new (require ('./BioSignalDatabase')) (this.DATABASE_FILE_NAME);
 }
 
 BioWatchManager.prototype = {
@@ -73,10 +73,10 @@ BioWatchManager.prototype = {
       if (defaultSettings) {
         console.log ('db file does not exist');
         Promise.resolve ().then (function () {
-          this.bioSignalDatabase.destroy ();
+          return this.bioSignalDatabase.destroy ();
         }.bind (this))
         .then (function () {
-          return this.bioSignalDatabase.init (this.DATABASE_FILE_NAME);
+          return this.bioSignalDatabase.init ();
         }.bind (this))
         .then (function () {
           var rooms = defaultSettings.rooms;
@@ -122,7 +122,7 @@ BioWatchManager.prototype = {
         console.log ('db file does exist');
         var initial_status = [];
 
-        return this.bioSignalDatabase.init (this.DATABASE_FILE_NAME)
+        return this.bioSignalDatabase.init ()
         .then (function () {
           return this.bioSignalDatabase.getPlaceList ();
         }.bind (this))
