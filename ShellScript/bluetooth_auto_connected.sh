@@ -178,6 +178,7 @@ subGrafcet() {
   elif [ ${x30} == 1 ] && [ $deviceIndex -ge ${#registeredDeviceList[@]} ]; then  
     x3=0
     x2=1
+    action
   elif [ ${x31} == 1 ]; then
     x31=0
     x32=1
