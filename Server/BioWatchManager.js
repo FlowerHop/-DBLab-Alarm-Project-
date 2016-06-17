@@ -49,7 +49,7 @@ BioWatchManager.prototype = {
 
       if (autoReset === true) {
         console.log ('autoReset == true');
-        return Promise.resolve (function () {
+        return Promise.resolve ().then (function () {
           return data.default_settings;
         });
       } else {
@@ -81,7 +81,7 @@ BioWatchManager.prototype = {
         .then (function () {
           var rooms = defaultSettings.rooms;
           var bioWatches = defaultSettings.bioWatches;
-
+    
           rooms.forEach (function (room) {
             this.bioSignalDatabase.insertPlace (room);
           }.bind (this));

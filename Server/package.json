@@ -1,7 +1,6 @@
 {
-  "name": "biocenter",
+  "name": "flowerhop",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "directories": {
     "test": "test"
@@ -15,7 +14,11 @@
     "should": "^8.3.2"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
     "brfs": "^1.4.3",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-sourcemaps": "^1.6.0",
     "json-loader": "^0.5.4",
     "mocha": "^2.4.5",
     "transform-loader": "^0.2.3",
@@ -37,5 +40,6 @@
   "bugs": {
     "url": "https://github.com/FlowerHop/-DBLab-Alarm-Project-/issues"
   },
-  "homepage": "https://github.com/FlowerHop/-DBLab-Alarm-Project-#readme"
+  "homepage": "https://github.com/FlowerHop/-DBLab-Alarm-Project-#readme",
+  "description": ""
 }
