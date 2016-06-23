@@ -29,7 +29,6 @@ volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
 int x0 = 1, x1 = 0, x2 = 0, x3 = 0;
 
 void setup () {
-
 }
 
 //  Where the Magic Happens
@@ -39,16 +38,16 @@ void loop () {
 }
 
 void grafcet() {
-    if(x0 == 1 ) {
+    if (x0 == 1) {
         x0 = 0;
         x1 = 1;
-    }else if(x1 == 1){ // A Heartbeat Was Found
+    } else if (x1 == 1) { // A Heartbeat Was Found
         x1 = 0;
         x2 = 1;
-    }else if(x2 == 1 && BTSerial.available ()){
+    } else if (x2 == 1) {
         x2 = 0;
         x3 = 1;
-    }else if(x3 == 1){
+    } else if (x3 == 1) {
         x3 = 0;
         x2 = 1;
     }
@@ -56,18 +55,20 @@ void grafcet() {
 }
 
 void action() {
-    if(x0 == 1){
-    }else if(x1 == 1){
+    if (x0 == 1) {
+    } else if(x1 == 1) {  
         Serial.begin (115200);             // we agree to talk fast!
+        while (!Serial);                   // this is necessary for Leonardo to find the serialport.
+        delay (100);
         initBTSerial ();
         interruptSetup ();                 // sets up to read Pulse Sensor signal every 2mS
-    }else if(x2 == 1){
-        if(QS == true){
+    } else if (x2 == 1) {
+        if (QS == true) {
             QS = false;
-        }else{
+        } else {
             BPM = -1;
         }
-    }else if(x3 == 1){
+    } else if (x3 == 1) {
         // BPM and IBI have been Determined
         // Quantified Self "QS" true when arduino finds a heartbeat
         sendDataToSerial (BPM); // A Beat Happened, Output that to serial.
@@ -77,8 +78,8 @@ void action() {
 void initBTSerial () {
     pinMode (9, OUTPUT);  // this pin will pull the HC-05 pin 34 (key pin) HIGH to switch module to AT mode
     digitalWrite (9, HIGH);
-
     BTSerial.begin (38400);  // HC-05 default speed in AT command more
+    
     delay (200);
     for (int i = 0; i < sizeof (INIT); i++) {
         BTSerial.write (INIT[i]);
@@ -109,9 +110,11 @@ void sendDataToSerial (int data){
 
     result[19] = result_postfix[0];
     result[20] = result_postfix[1];
+    Serial.println ("T");
     Serial.print (result);
     BTSerial.write (result);
   }
 }
+
 
 
